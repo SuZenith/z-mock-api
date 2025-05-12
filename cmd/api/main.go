@@ -49,15 +49,15 @@ func main() {
 	e.HTTPErrorHandler = handlers.CustomHTTPErrorHandler
 	// 注册自定义验证器
 	e.Validator = validators.NewCustomValidator()
-	// 注册路由
-	routes.RegisterRoutes(e)
 
 	// 初始化数据库连接
-	var db *database.DB
-	db, err = database.New(&cfg.Database)
-	if err != nil {
-		KiteLogger.Error("Failed to connect to database", zap.Error(err))
+	if err := database.InitDB(&cfg.Database); err != nil {
+		KiteLogger.Error("Failed to initialize database", zap.Error(err))
+		os.Exit(1)
 	}
+
+	// 注册路由
+	routes.RegisterRoutes(e)
 
 	// 创建通道接受关机信号
 	quit := make(chan os.Signal, 1)
@@ -94,11 +94,10 @@ func main() {
 	}
 
 	// 关闭数据库连接
-	if db != nil {
-		KiteLogger.Info("Closing database connection...")
-		if err := db.Close(); err != nil {
-			KiteLogger.Error("Failed to close database connection: %v", zap.Error(err))
-		}
+	err = database.CloseDB()
+	if err != nil {
+		KiteLogger.Error("Failed to close database", zap.Error(err))
+		os.Exit(1)
 	}
 	KiteLogger.Info("Server gracefully stopped")
 }

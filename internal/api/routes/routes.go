@@ -4,6 +4,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"kite/internal/api/handlers"
 	"kite/internal/api/handlers/fund_pay"
+	"kite/internal/database"
+	"kite/internal/repositories/accounts"
 )
 
 func RegisterRoutes(e *echo.Echo) {
@@ -14,6 +16,7 @@ func RegisterRoutes(e *echo.Echo) {
 	// 支付提现相关路由
 	fundPayRoutes := v1.Group("/fund-pay")
 
-	withdrawHandler := fund_pay.NewWithdrawHandler()
+	userRepo := accounts.NewUserRepository(database.GetDB())
+	withdrawHandler := fund_pay.NewWithdrawHandler(userRepo)
 	fundPayRoutes.POST("/withdraw/apply", withdrawHandler.Apply)
 }

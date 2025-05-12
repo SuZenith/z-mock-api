@@ -3,12 +3,14 @@ server:
   shutdown_timeout: 10
 
 database:
-  driver: postgres
+  driver: mysql
   host: localhost
-  port: 5432
-  name: ${DB_USER}
-  password: ${DB_PASSWORD}
+  port: 3306
+  name: newcounter
+  user: root
+  password: Xbcd20198$
   ssl_mode: disable
+  charset: utf8mb4
   max_idle_conn: 5
   max_open_conn: 100
   max_lifetime: 3600

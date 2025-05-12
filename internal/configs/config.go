@@ -10,9 +10,9 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server"`
-	Database DatabaseConfig `mapstructure:"database"`
-	Log      LogConfig      `mapstructure:"log"`
+	Server   ServerConfig `mapstructure:"server"`
+	Database MySQLConfig  `mapstructure:"database"`
+	Log      LogConfig    `mapstructure:"log"`
 }
 
 type ServerConfig struct {
@@ -26,13 +26,13 @@ type LogConfig struct {
 	Dev      bool   `mapstructure:"dev"`
 }
 
-type DatabaseConfig struct {
-	Driver      string `mapstructure:"driver"`
+type MySQLConfig struct {
 	Host        string `mapstructure:"host"`
 	Port        int    `mapstructure:"port"`
 	Name        string `mapstructure:"name"`
 	User        string `mapstructure:"user"`
 	Password    string `mapstructure:"password"`
+	Charset     string `mapstructure:"charset"`
 	MaxIdleConn int    `mapstructure:"max_idle_conn"`
 	MaxOpenConn int    `mapstructure:"max_open_conn"`
 	MaxLifeConn int    `mapstructure:"max_life_conn"`

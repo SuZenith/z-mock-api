@@ -21,8 +21,9 @@ func CustomHTTPErrorHandler(err error, c echo.Context) {
 		message = "Internal Server Error"
 		errCode = int(kiteError.InternalServerError)
 	)
-
-	if appErr, ok := kiteError.IsAppError(err); ok {
+	appErr, ok := kiteError.IsAppError(err)
+	println(ok)
+	if ok {
 		code = appErr.HTTPStatus
 		message = appErr.Message
 		errCode = int(appErr.Code)
@@ -34,8 +35,10 @@ func CustomHTTPErrorHandler(err error, c echo.Context) {
 		message = fmt.Sprintf("%v", e.Message)
 		errCode = code
 	} else {
-		// 未知的错误
-		log.Printf("Unexpected error: %v", err)
+		// 排除自定义的错误, 打印未知的错误
+		if !ok {
+			log.Printf("Unexpected error: %v, %T", err, err)
+		}
 	}
 	// 如果响应已经提交，直接返回
 	if c.Response().Committed {
