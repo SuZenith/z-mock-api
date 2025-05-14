@@ -14,6 +14,35 @@ const (
 	Debug     = 0
 )
 
+const (
+	ServerRegisterSuccess             = "server_register_success"
+	ServerLoginSuccess                = "server_login_success"
+	ServerPlaceOrderSuccess           = "server_place_order_success"
+	ServerLimitOrderSuccess           = "server_limit_order_success"
+	ServerRechargeSuccess             = "server_recharge_success"
+	ServerUserActivationSuccess       = "server_user_activation_success"
+	ServerUserRegisterSuccess         = "server_user_register_success"
+	ServerUserRechargeFirstDaySuccess = "server_user_recharge_first_day_success"
+
+	EventNameApiLoginSuccess                   = "api_login_success"                       // 登录成功
+	EventNameApiLoginFail                      = "api_login_fail"                          // 登录失败
+	EventNameApiLoginVerificationCodeSuccess   = "api_login_verification_code_success"     // 登录获取验证码成功
+	EventNameApiLoginVerificationCodeFail      = "api_login_verification_code_fail"        // 登录获取验证码失败
+	EventNameApiPlaceOrderSuccess              = "api_place_order_success"                 // 下单成功
+	EventNameApiPlaceOrderFail                 = "api_place_order_fail"                    // 下单失败
+	EventNameApiRechargeSuccess                = "api_recharge_success"                    // 充值成功
+	EventNameApiRechargeFail                   = "api_recharge_fail"                       // 充值失败
+	EventNameApiWithdrawSuccess                = "api_withdraw_success"                    // 提现成功
+	EventNameApiWithdrawFail                   = "api_withdraw_fail"                       // 提现失败
+	EventNameApiRegisterSuccess                = "api_register_success"                    // 注册成功
+	EventNameApiRegisterRiskControlPass        = "api_register_risk_control_pass"          // 注册风控通过
+	EventNameApiRiskControlUserForbidden       = "api_risk_control_user_forbidden"         // 注册风控未通过
+	EventNameApiFirstRechargeSuccess           = "api_first_recharge_success"              // 首次充值成功
+	EventNameApiNewArrivalFirstDayCouponUsed   = "api_new_arrival_first_day_coupon_used"   // 新人券使用成功
+	EventNameApiFirstTimePlaceOrderCashSuccess = "api_first_time_place_order_cash_success" // 首次现金下单成功
+	EventNameApiPlaceOrderCashSuccess          = "api_place_order_cash_success"            // 现金下单成功
+)
+
 type ThinkDataClient interface {
 	Track(ctx context.Context, eventName string, userId *uint, appTk *string, ip *string)
 }

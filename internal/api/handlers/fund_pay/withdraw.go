@@ -9,10 +9,10 @@ import (
 )
 
 type WithdrawHandler struct {
-	service *fund_pay.WithdrawService
+	service fund_pay.WithdrawService
 }
 
-func NewWithdrawHandler(service *fund_pay.WithdrawService) *WithdrawHandler {
+func NewWithdrawHandler(service fund_pay.WithdrawService) *WithdrawHandler {
 	return &WithdrawHandler{service}
 }
 

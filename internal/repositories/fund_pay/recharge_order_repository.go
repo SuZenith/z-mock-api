@@ -3,6 +3,7 @@ package fund_pay
 import (
 	"context"
 	"errors"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 	"kite/internal/database"
 	"kite/internal/models"
@@ -13,6 +14,8 @@ type RechargeOrderRepository interface {
 	QuerySuccessRechargeOrderCountByUserId(ctx context.Context, userId uint) (int64, error)
 	// QueryFirstOrderByUserId 查询用户最早一笔订单
 	QueryFirstOrderByUserId(ctx context.Context, userId uint) (*models.RechargeOrders, error)
+	// QueryRechargeTotalAmountByUserId 查询用户的充值总金额
+	QueryRechargeTotalAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error)
 }
 
 type rechargeOrderRepository struct {
@@ -43,4 +46,16 @@ func (r *rechargeOrderRepository) QueryFirstOrderByUserId(ctx context.Context, u
 		}
 	}
 	return &rechargeOrders, nil
+}
+
+func (r *rechargeOrderRepository) QueryRechargeTotalAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error) {
+	var totalAmount decimal.Decimal
+
+	result := r.db.WithContext(ctx).Where("userId = ?", userId).
+		Select("COALESCE(SUM(amount), 0)").
+		Scan(&totalAmount)
+	if result.Error != nil {
+		return decimal.Zero, result.Error
+	}
+	return totalAmount, nil
 }

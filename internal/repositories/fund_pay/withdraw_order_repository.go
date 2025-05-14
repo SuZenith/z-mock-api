@@ -8,7 +8,7 @@ import (
 )
 
 type WithdrawOrderRepository interface {
-	GetSumAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error)
+	QueryWithdrawTotalAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error)
 }
 
 type withdrawOrderRepository struct {
@@ -19,7 +19,7 @@ func NewWithdrawOrderRepository(connection *database.MySQLConnection) WithdrawOr
 	return &withdrawOrderRepository{db: connection.GetDB()}
 }
 
-func (r *withdrawOrderRepository) GetSumAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error) {
+func (r *withdrawOrderRepository) QueryWithdrawTotalAmountByUserId(ctx context.Context, userId uint) (decimal.Decimal, error) {
 	var sum decimal.Decimal
 
 	result := r.db.WithContext(ctx).Where("userId = ?", userId).

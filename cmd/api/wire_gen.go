@@ -9,14 +9,14 @@ package main
 import (
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
-	fund_pay2 "kite/internal/api/handlers/fund_pay"
+	fund_pay3 "kite/internal/api/handlers/fund_pay"
 	"kite/internal/configs"
 	"kite/internal/database"
 	"kite/internal/repositories/accounts"
-	fund_pay3 "kite/internal/repositories/fund_pay"
+	"kite/internal/repositories/fund_pay"
 	"kite/internal/repositories/orders"
 	"kite/internal/services/account"
-	"kite/internal/services/fund_pay"
+	fund_pay2 "kite/internal/services/fund_pay"
 )
 
 // Injectors from wire.go:
@@ -25,16 +25,17 @@ func InitializeApp(cfg *configs.MySQLConfig, echo2 *echo.Echo) (*Server, error) 
 	mySQLConnection := database.NewMySQLConnection(cfg)
 	userRepository := accounts.NewUserRepository(mySQLConnection)
 	userService := account.NewUserService(userRepository)
-	withdrawService := fund_pay.NewWithdrawService(userService)
-	withdrawHandler := fund_pay2.NewWithdrawHandler(withdrawService)
+	withdrawOrderRepository := fund_pay.NewWithdrawOrderRepository(mySQLConnection)
+	withdrawService := fund_pay2.NewWithdrawService(userService, withdrawOrderRepository)
+	withdrawHandler := fund_pay3.NewWithdrawHandler(withdrawService)
 	server := NewServer(echo2, withdrawHandler, mySQLConnection)
 	return server, nil
 }
 
 // wire.go:
 
-var RepositorySet = wire.NewSet(accounts.NewUserRepository, fund_pay3.NewRechargeOrderRepository, fund_pay3.NewWithdrawOrderRepository, orders.NewCreateOrdersRepository)
+var RepositorySet = wire.NewSet(accounts.NewUserRepository, fund_pay.NewRechargeOrderRepository, fund_pay.NewWithdrawOrderRepository, orders.NewCreateOrdersRepository)
 
-var ServiceSet = wire.NewSet(account.NewUserService, fund_pay.NewRechargeService, fund_pay.NewWithdrawService)
+var ServiceSet = wire.NewSet(account.NewUserService, fund_pay2.NewRechargeService, fund_pay2.NewWithdrawService)
 
-var HandlerSet = wire.NewSet(fund_pay2.NewWithdrawHandler)
+var HandlerSet = wire.NewSet(fund_pay3.NewWithdrawHandler)
