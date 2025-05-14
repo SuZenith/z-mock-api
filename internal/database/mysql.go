@@ -9,12 +9,24 @@ import (
 	"gorm.io/gorm/schema"
 	"kite/internal/configs"
 	KiteLogger "kite/pkg/logger"
+	"os"
 	"time"
 )
 
-var DB *gorm.DB
+type MySQLConnection struct {
+	db *gorm.DB
+}
 
-func InitDB(cfg *configs.MySQLConfig) error {
+func NewMySQLConnection(cfg *configs.MySQLConfig) *MySQLConnection {
+	db, err := InitDB(cfg)
+	if err != nil {
+		KiteLogger.Error("Failed to initialize database", zap.Error(err))
+		os.Exit(1)
+	}
+	return &MySQLConnection{db: db}
+}
+
+func InitDB(cfg *configs.MySQLConfig) (*gorm.DB, error) {
 	var err error
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
@@ -46,14 +58,14 @@ func InitDB(cfg *configs.MySQLConfig) error {
 	}
 
 	// 连接数据库
-	DB, err = gorm.Open(mysql.Open(dsn), gormConfig)
+	DB, err := gorm.Open(mysql.Open(dsn), gormConfig)
 	if err != nil {
-		return fmt.Errorf("failed to connect database: %w", err)
+		return nil, fmt.Errorf("failed to connect database: %w", err)
 	}
 	// 获取 SQL DB 对象，用于设置连接池
 	sqlDB, err := DB.DB()
 	if err != nil {
-		return fmt.Errorf("failed to get database connection: %w", err)
+		return nil, fmt.Errorf("failed to get database connection: %w", err)
 	}
 	// 设置连接池参数
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConn)
@@ -62,7 +74,7 @@ func InitDB(cfg *configs.MySQLConfig) error {
 
 	// 测试数据库连接
 	if err := sqlDB.Ping(); err != nil {
-		return fmt.Errorf("failed to ping database: %w", err)
+		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 	KiteLogger.Info("Successfully connected to database",
 		zap.String("host", cfg.Host),
@@ -70,18 +82,18 @@ func InitDB(cfg *configs.MySQLConfig) error {
 		zap.String("database", cfg.Name),
 	)
 
-	return nil
+	return DB, nil
 }
 
-func GetDB() *gorm.DB {
-	return DB
+func (c *MySQLConnection) GetDB() *gorm.DB {
+	return c.db
 }
 
-func CloseDB() error {
-	if DB == nil {
+func (c *MySQLConnection) CloseDB() error {
+	if c.db == nil {
 		return nil
 	}
-	sqlDB, err := DB.DB()
+	sqlDB, err := c.db.DB()
 	if err != nil {
 		return fmt.Errorf("failed to get database connection: %w", err)
 	}
@@ -92,8 +104,8 @@ func CloseDB() error {
 	return nil
 }
 
-func WithTransaction(txFn func(tx *gorm.DB) error) error {
-	return DB.Transaction(func(tx *gorm.DB) error {
+func (c *MySQLConnection) WithTransaction(txFn func(tx *gorm.DB) error) error {
+	return c.db.Transaction(func(tx *gorm.DB) error {
 		return txFn(tx)
 	})
 }

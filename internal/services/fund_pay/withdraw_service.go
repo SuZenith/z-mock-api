@@ -5,21 +5,21 @@ import (
 	"github.com/labstack/echo/v4"
 	"kite/internal/api/payloads"
 	KiteError "kite/internal/errors"
-	"kite/internal/repositories/accounts"
+	"kite/internal/services/account"
 )
 
 type WithdrawService struct {
-	userRepo accounts.UserRepository
+	userService account.UserService
 }
 
-func NewWithdrawService(userRepo accounts.UserRepository) *WithdrawService {
+func NewWithdrawService(userService account.UserService) *WithdrawService {
 	return &WithdrawService{
-		userRepo: userRepo,
+		userService,
 	}
 }
 
 func (s *WithdrawService) Apply(ctx echo.Context, payload payloads.ApplyPayload) error {
-	user, err := s.userRepo.FindByUserId(ctx.Request().Context(), 545252)
+	user, err := s.userService.FindByUserId(ctx.Request().Context(), 545252)
 	if err != nil {
 		return KiteError.New(KiteError.InternalServerError, err)
 	}

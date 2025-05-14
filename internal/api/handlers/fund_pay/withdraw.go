@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"kite/internal/api/payloads"
 	"kite/internal/api/validators"
-	"kite/internal/repositories/accounts"
 	"kite/internal/services/fund_pay"
 	"kite/pkg/response"
 )
@@ -13,10 +12,8 @@ type WithdrawHandler struct {
 	service *fund_pay.WithdrawService
 }
 
-func NewWithdrawHandler(userRepo accounts.UserRepository) *WithdrawHandler {
-	return &WithdrawHandler{
-		service: fund_pay.NewWithdrawService(userRepo),
-	}
+func NewWithdrawHandler(service *fund_pay.WithdrawService) *WithdrawHandler {
+	return &WithdrawHandler{service}
 }
 
 // Apply 申请提现
