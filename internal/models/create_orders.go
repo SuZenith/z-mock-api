@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type CreateOrder struct {
+type CreateOrders struct {
 	Id                        uint64          `gorm:"column:id;primary_key"`
 	OrderNum                  string          `gorm:"column:orderNum;type:varchar(30);not null;comment:'订单号'"`
 	ProductID                 string          `gorm:"column:productId;type:varchar(10);comment:'商品ID'"`

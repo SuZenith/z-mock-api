@@ -17,6 +17,7 @@ const (
 	ValidationError
 	DataError
 	MarshalError
+	UnmarshalError
 
 	// BadRequestError 客户端错误
 	BadRequestError ErrorCode = -2000 - iota
@@ -35,6 +36,7 @@ var errorCodeToHTTPStatus = map[ErrorCode]int{
 	ConfigError:         http.StatusInternalServerError,
 	DataError:           http.StatusInternalServerError,
 	MarshalError:        http.StatusInternalServerError,
+	UnmarshalError:      http.StatusInternalServerError,
 	ValidationError:     http.StatusBadRequest,
 	BadRequestError:     http.StatusBadRequest,
 	UnauthorizedError:   http.StatusUnauthorized,
@@ -50,6 +52,7 @@ var errorCodeToMessage = map[ErrorCode]string{
 	ConfigError:         "Internal Server Error",
 	DataError:           "Internal Server Error",
 	MarshalError:        "Internal Server Error",
+	UnmarshalError:      "Internal Server Error",
 	ValidationError:     "Validation Error",
 	BadRequestError:     "Bad Request",
 	UnauthorizedError:   "Unauthorized",

@@ -19,12 +19,14 @@ import (
 
 var RepositorySet = wire.NewSet(
 	repo_accounts.NewUserRepository,
+	repo_fund_pay.NewRechargeOrderRepository,
 	repo_fund_pay.NewWithdrawOrderRepository,
 	repo_orders.NewCreateOrdersRepository,
 )
 
 var ServiceSet = wire.NewSet(
 	service_account.NewUserService,
+	service_fund_pay.NewRechargeService,
 	service_fund_pay.NewWithdrawService,
 )
 

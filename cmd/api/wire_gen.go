@@ -33,8 +33,8 @@ func InitializeApp(cfg *configs.MySQLConfig, echo2 *echo.Echo) (*Server, error) 
 
 // wire.go:
 
-var RepositorySet = wire.NewSet(accounts.NewUserRepository, fund_pay3.NewWithdrawOrderRepository, orders.NewCreateOrdersRepository)
+var RepositorySet = wire.NewSet(accounts.NewUserRepository, fund_pay3.NewRechargeOrderRepository, fund_pay3.NewWithdrawOrderRepository, orders.NewCreateOrdersRepository)
 
-var ServiceSet = wire.NewSet(account.NewUserService, fund_pay.NewWithdrawService)
+var ServiceSet = wire.NewSet(account.NewUserService, fund_pay.NewRechargeService, fund_pay.NewWithdrawService)
 
 var HandlerSet = wire.NewSet(fund_pay2.NewWithdrawHandler)
