@@ -41,7 +41,7 @@ func InitDB(cfg *configs.MySQLConfig) (*gorm.DB, error) {
 	gormConfig := &gorm.Config{
 		SkipDefaultTransaction: true,
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
+			SingularTable: false,
 		},
 		// 简直自动创建外建约束
 		DisableForeignKeyConstraintWhenMigrating: true,
