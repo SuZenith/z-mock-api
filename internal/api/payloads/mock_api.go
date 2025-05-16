@@ -29,8 +29,3 @@ func (m *MockApiPayload) GetHeadersJSON() (json.RawMessage, error) {
 	}
 	return json.Marshal(headersMap)
 }
-
-type RequestPayload struct {
-	Uid  string `query:"uid"`
-	Path string `query:"path"`
-}

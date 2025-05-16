@@ -12,6 +12,7 @@ import (
 
 type ApiRepository interface {
 	CreateApi(ctx context.Context, payload payloads.MockApiPayload, uuid string) error
+	QueryApiWithUidAndPathAndMethod(ctx context.Context, uid string, path string, method string) (*models.Api, error)
 }
 
 type apiRepository struct {
@@ -43,4 +44,15 @@ func (r *apiRepository) CreateApi(ctx context.Context, payload payloads.MockApiP
 		return result.Error
 	}
 	return nil
+}
+
+func (r *apiRepository) QueryApiWithUidAndPathAndMethod(ctx context.Context, uid string, path string, method string) (*models.Api, error) {
+	var api *models.Api
+	result := r.db.WithContext(ctx).
+		Where("user_id = ? AND path = ? AND method = ?", uid, path, method).
+		First(&api)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return api, nil
 }

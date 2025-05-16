@@ -10,6 +10,7 @@ import (
 
 type ApiService interface {
 	Create(ctx echo.Context, payload payloads.MockApiPayload) error
+	Request(ctx echo.Context, uid string, path string, method string) (contextType *string, responseBody *string, err error)
 }
 
 type apiService struct {
@@ -27,4 +28,12 @@ func (s *apiService) Create(ctx echo.Context, payload payloads.MockApiPayload) e
 		return KiteError.New(KiteError.ApiCreateError, err)
 	}
 	return nil
+}
+
+func (s *apiService) Request(ctx echo.Context, uid string, path string, method string) (contextType *string, responseBody *string, err error) {
+	api, err := s.repo.QueryApiWithUidAndPathAndMethod(ctx.Request().Context(), uid, path, method)
+	if err != nil {
+		return nil, nil, KiteError.New(KiteError.InternalServerError, err)
+	}
+	return &api.ContentType, &api.ResponseBody, nil
 }

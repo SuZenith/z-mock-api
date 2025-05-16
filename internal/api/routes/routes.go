@@ -14,5 +14,7 @@ func RegisterRoutes(e *echo.Echo, mockHandler *mock.ApiHandler) {
 	mockRoutes := v1.Group("/mock")
 	mockRoutes.POST("/create", mockHandler.Create)
 	mockRoutes.GET("/:uid/*", mockHandler.Get)
-
+	mockRoutes.POST("/:uid/*", mockHandler.Post)
+	mockRoutes.PUT("/:uid/*", mockHandler.Put)
+	mockRoutes.DELETE("/:uid/*", mockHandler.Delete)
 }
