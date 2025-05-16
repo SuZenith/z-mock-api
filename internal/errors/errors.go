@@ -27,6 +27,7 @@ const (
 
 	// UserNotFoundError 业务级的错误
 	UserNotFoundError ErrorCode = -3000 - iota
+	ApiCreateError
 )
 
 // 错误码到 HTTP 状态码的映射
@@ -43,6 +44,7 @@ var errorCodeToHTTPStatus = map[ErrorCode]int{
 	ForbiddenError:      http.StatusForbidden,
 	NotFoundError:       http.StatusNotFound,
 	UserNotFoundError:   http.StatusNotFound,
+	ApiCreateError:      http.StatusBadRequest,
 }
 
 // 错误码到消息的映射
@@ -59,6 +61,7 @@ var errorCodeToMessage = map[ErrorCode]string{
 	ForbiddenError:      "Forbidden",
 	NotFoundError:       "Not Found",
 	UserNotFoundError:   "User Not Found",
+	ApiCreateError:      "Api Create Error",
 }
 
 type AppError struct {

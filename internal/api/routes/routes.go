@@ -3,15 +3,18 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 	"kite/internal/api/handlers"
-	"kite/internal/api/handlers/fund_pay"
+	"kite/internal/api/handlers/mock"
 )
 
-func RegisterRoutes(e *echo.Echo, withdrawHandler *fund_pay.WithdrawHandler) {
+func RegisterRoutes(e *echo.Echo, mockHandler *mock.ApiHandler) {
 	e.GET("/health", handlers.HealthCheck)
 
 	v1 := e.Group("/api/v1")
 
-	// 支付提现相关路由
-	fundPayRoutes := v1.Group("/fund-pay")
-	fundPayRoutes.POST("/withdraw/apply", withdrawHandler.Apply)
+	mockRoutes := v1.Group("/mock")
+	mockRoutes.POST("/create", mockHandler.Create)
+	mockRoutes.GET("/:uid/*", mockHandler.Get)
+	mockRoutes.POST("/:uid/*", mockHandler.Post)
+	mockRoutes.PUT("/:uid/*", mockHandler.Put)
+	mockRoutes.DELETE("/:uid/*", mockHandler.Delete)
 }

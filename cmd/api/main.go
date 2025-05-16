@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
 	"kite/internal/api/handlers"
-	"kite/internal/api/handlers/fund_pay"
+	"kite/internal/api/handlers/mock"
 	"kite/internal/api/routes"
 	"kite/internal/api/validators"
 	"kite/internal/configs"
@@ -25,11 +25,15 @@ import (
 type Server struct {
 	Echo            *echo.Echo
 	MySQLConnection *database.MySQLConnection
-	WithdrawHandler *fund_pay.WithdrawHandler
+	MockHandler     *mock.ApiHandler
 }
 
-func NewServer(echo *echo.Echo, withdrawHandler *fund_pay.WithdrawHandler, mysqlConnection *database.MySQLConnection) *Server {
-	return &Server{echo, mysqlConnection, withdrawHandler}
+func NewServer(
+	echo *echo.Echo,
+	mysqlConnection *database.MySQLConnection,
+	mockHandler *mock.ApiHandler,
+) *Server {
+	return &Server{echo, mysqlConnection, mockHandler}
 }
 
 func main() {
@@ -65,7 +69,7 @@ func main() {
 	server.Echo.Validator = validators.NewCustomValidator()
 
 	// 注册路由
-	routes.RegisterRoutes(server.Echo, server.WithdrawHandler)
+	routes.RegisterRoutes(server.Echo, server.MockHandler)
 
 	// 创建通道接受关机信号
 	quit := make(chan os.Signal, 1)
